@@ -1,6 +1,6 @@
-#lmapulator.vim
-Manipulate the 'langmap' option.
+#brainfvck.vim
+Vim plugin: Processing system of brainf*ck.
 
 ## Installation
-    git clone git://github.com/emanon001/lmapulator.vim.git ~/.vim/bundle/lmapulator.vim/
-    echo set runtimepath+=~/.vim/bundle/lmapulator.vim/ >> ~/.vimrc
+    git clone git://github.com/emanon001/brainfvck.vim.git ~/.vim/bundle/brainfvck.vim/
+    echo set runtimepath+=~/.vim/bundle/brainfvck.vim/ >> ~/.vimrc
