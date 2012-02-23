@@ -74,7 +74,7 @@ endfunction
 function! brainfvck#run(source) " {{{2
   let interp = s:brainfvck.setup(a:source)
   try
-    while interp.finished_p() == s:FALSE
+    while !interp.finished_p()
       call interp.execute_command()
     endwhile
   catch /^brainfvck:/
@@ -92,7 +92,6 @@ function! s:brainfvck.increment_pointer()  " {{{2
     call self.extend_buffer()
   endif
   let self.V.data_pointer += 1
-  let self.V.instruction_pointer += 1
 endfunction
 
 
@@ -101,25 +100,21 @@ function! s:brainfvck.decrement_pointer()  " {{{2
     throw s:create_error_message('Data pointer is a negative number.')
   endif
   let self.V.data_pointer -= 1
-  let self.V.instruction_pointer += 1
 endfunction
 
 
 function! s:brainfvck.increment_byte()  " {{{2
   let self.V.buffer[self.V.data_pointer] += 1
-  let self.V.instruction_pointer += 1
 endfunction
 
 
 function! s:brainfvck.decrement_byte()  " {{{2
   let self.V.buffer[self.V.data_pointer] -= 1
-  let self.V.instruction_pointer += 1
 endfunction
 
 
 function! s:brainfvck.output_byte()  " {{{2
   echon nr2char(self.get_current_byte())
-  let self.V.instruction_pointer += 1
 endfunction
 
 
@@ -131,7 +126,6 @@ function! s:brainfvck.input_byte()  " {{{2
     throw s:create_error_message('Input value is not 1-byte character.')
   endif
   let self.V.buffer[self.V.data_pointer] = byte
-  let self.V.instruction_pointer += 1
 endfunction
 
 
@@ -208,6 +202,9 @@ function! s:brainfvck.execute_command() " {{{2
   let src = self.V.source
   let command = src[self.V.instruction_pointer]
   call self[command]()
+  if !self.instruction_pointer_move_command_p(command)
+    let self.V.instruction_pointer += 1
+  endif
 endfunction
 
 
@@ -232,6 +229,10 @@ endfunction
 
 function! s:brainfvck.remove_invalid_commands(source) " {{{2
   return substitute(a:source, '[^<>+\-,.[\]]', '', 'g')
+endfunction
+
+function! s:brainfvck.instruction_pointer_move_command_p(command) " {{{2
+  return a:command =~ '[[\]]'
 endfunction
 
 
