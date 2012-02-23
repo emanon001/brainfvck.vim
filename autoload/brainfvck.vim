@@ -193,7 +193,7 @@ endfunction
 
 function! s:brainfvck.setup(source) " {{{2
   let interp = deepcopy(self)
-  let interp.V.source = interp.remove_valid_commands(a:source)
+  let interp.V.source = interp.remove_invalid_commands(a:source)
   let interp.V.source_size = strchars(interp.V.source)
   return interp
 endfunction
@@ -230,7 +230,7 @@ function! s:brainfvck.extend_buffer() " {{{2
 endfunction
 
 
-function! s:brainfvck.remove_valid_commands(source) " {{{2
+function! s:brainfvck.remove_invalid_commands(source) " {{{2
   return substitute(a:source, '[^<>+\-,.[\]]', '', 'g')
 endfunction
 
